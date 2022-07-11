@@ -41,10 +41,6 @@ const render = () => {
     const writeWhere = document.createElement('p');
     const writeWhen = document.createElement('p');
     const sum = document.createElement('p');
-    // const editButton = document.createElement('button');
-    // const deleteButton = document.createElement('button');
-    // const editImg = document.createElement('img');
-    // const deleteImg = document.createElement('img');
 
     list.appendChild(container);
     
@@ -52,23 +48,12 @@ const render = () => {
 
     container.appendChild(writeWhen);
     container.appendChild(sum);
-    // container.appendChild(editButton);
-    // container.appendChild(deleteButton);
-
-    // editButton.appendChild(editImg);
-    // deleteButton.appendChild(deleteImg);
 
     container.id = `container-${_id}`;
     container.className = 'list__container';
 
     [writeWhere.innerText, writeWhen.innerText, sum.innerText] = [`${index + 1}) ${where}`, when, `${cost} р.`];
     [writeWhere.className, writeWhen.className, sum.className] = ['write-where', 'write-when', 'sum'];
-
-    // editButton.className = 'list__edit';
-    // deleteButton.className = 'list__delete';
-
-    // editImg.src = 'img/edit.svg';
-    // deleteImg.src = 'img/delete.svg';
 
     const matchedTotal = total.innerText.match(itemSum);
     let totalSum = Number(matchedTotal);
@@ -77,13 +62,6 @@ const render = () => {
 
     addButtons(_id, writeWhere.innerText, writeWhen.innerText, sum.innerText);
 
-    // editButton.onclick = () => {
-    //   editItem(_id, writeWhere.innerText, writeWhen.innerText, sum.innerText);
-    // }
-
-    // deleteButton.onclick = () => {
-    //   deleteItem(_id);
-    // }
   });
 }
 
@@ -273,10 +251,6 @@ const cancelItemEditing = (id, lastWhere, lastWhen, lastSum) => {
   const writeWhere = document.createElement('p');
   const writeWhen = document.createElement('p');
   const sum = document.createElement('p');
-  // const editButton = document.createElement('button');
-  // const deleteButton = document.createElement('button');
-  // const editImg = document.createElement('img');
-  // const deleteImg = document.createElement('img');
 
   const inputs = parent.getElementsByTagName('input');
   const buttons = parent.getElementsByTagName('button');
@@ -293,29 +267,10 @@ const cancelItemEditing = (id, lastWhere, lastWhen, lastSum) => {
   parent.appendChild(writeWhere);
   parent.appendChild(writeWhen);
   parent.appendChild(sum);
-  // parent.appendChild(editButton);
-  // parent.appendChild(deleteButton);
-
-  // editButton.appendChild(editImg);
-  // deleteButton.appendChild(deleteImg);
 
   [writeWhere.className, writeWhen.className, sum.className] = ['write-where', 'write-when', 'sum'];
 
   addButtons(id, lastWhere, lastWhen, lastSum);
-
-  // editButton.className = 'list__edit';
-  // deleteButton.className = 'list__delete';
-
-  // editImg.src = 'img/edit.svg';
-  // deleteImg.src = 'img/delete.svg';
-
-  // editButton.onclick = () => {
-  //   editItem(id, lastWhere, lastWhen, lastSum);
-  // }
-
-  // deleteButton.onclick = () => {
-  //   deleteItem(id);
-  // }
 }
 
 const addButtons = (id, lastWhere, lastWhen, lastSum) => {
