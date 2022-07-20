@@ -4,14 +4,14 @@ body {
   background-color: #657580;
 }
 
-.my-costs__content-page {
+.costs__content-page {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-left: -5vw;
 }
 
-.my-costs__header h1 {
+.costs__header h1 {
   font-size: 70px;
   letter-spacing: 3px;
   font-weight: 500;
@@ -19,7 +19,7 @@ body {
 }
 
 
-.my-costs__data-picture {
+.costs__data-picture {
   display: flex;
   flex-direction: column;
 }
@@ -50,17 +50,17 @@ body {
   transform: scale(1.1);
 }
 
-.where-spent, .how-much-spent {
+.place-spent, .how-much-spent {
   margin-right: 20px;
 }
 
-.where-spent h4, .how-much-spent h4 {
+.place-spent h4, .how-much-spent h4 {
   font-size: 25px;
   font-weight: 300;
   letter-spacing: 1px;
 }
 
-.where-spent input, .how-much-spent input {
+.place-spent input, .how-much-spent input {
   margin-top: -20px;
   border: 1px solid rgb(184, 181, 181);
   border-radius: 7px;
@@ -73,14 +73,25 @@ body {
   width: 25vw;
 }
 
-.how-much-spent input:focus, .where-spent input:focus  {
+.how-much-spent input:focus, .place-spent input:focus  {
   border: 0px;
   outline: 0px;
 }
 
-.how-much-spent::-webkit-input-placeholder, .where-spent::-webkit-input-placeholder {
+.how-much-spent::-webkit-input-placeholder, .place-spent::-webkit-input-placeholder {
   opacity: 0.4;
   letter-spacing: 1px;
+}
+
+.under-spendings {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.error-message {
+  font-size: 40px;
+  color: red;
 }
 
 .total {
@@ -114,11 +125,11 @@ body {
   justify-content: space-between;
 }
 
-.write-where {
+.write-place {
   width: 40vw;
 }
 
-.write-when {
+.write-time {
   width: 24vw;
 }
 
@@ -149,7 +160,7 @@ body {
   width: 50px;
 }
 
-.container__replace-where, .container__replace-when, .container__replace-cost {
+.container__replace-place, .container__replace-time, .container__replace-cost {
   height: 70px;
   width: 40vw;
   outline: 0px;
@@ -157,10 +168,8 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
-.container__replace-when {
+.container__replace-time {
   width: 24vw;
-  /*background-color: #657580;
-  border: 0px; */
 }
 
 .container__replace-cost {
@@ -172,8 +181,8 @@ body {
 .loading {
   position: fixed;
   z-index: 999;
-  height: 2em;
-  width: 2em;
+  height: 10px;
+  width: 10px;
   overflow: visible;
   margin: auto;
   top: 0;
@@ -189,13 +198,14 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background-color: rgba(0,0,0,0.3);
 }
 
 /* :not(:required) hides these rules from IE9 and below */
 .loading:not(:required) {
+
   /* hide "loading..." text */
   font: 0/0 a;
   color: transparent;
@@ -204,7 +214,7 @@ body {
   border: 0;
 }
 
-.loading:not(:required):after {
+.loading:after {
   content: '';
   display: block;
   font-size: 10px;
@@ -293,7 +303,7 @@ body {
     font-size: 45px;
   }
 
-  .container__replace-where, .container__replace-when, .container__replace-cost {
+  .container__replace-place, .container__replace-time, .container__replace-cost {
     font-size: 45px;
 
   }
@@ -304,21 +314,21 @@ body {
     background-color: #c5e7ff;
   }
 
-  .my-costs__content-page {
+  .costs__content-page {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     margin-left: 5vw;
   }
 
-  .my-costs__header {
+  .costs__header {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
   }
 
-  .my-costs__header h1 {
+  .costs__header h1 {
     margin-left: 0vw;
   }
 
@@ -332,11 +342,11 @@ body {
     background-color: #49b78d;
   }
 
-  .where-spent, .how-much-spent {
+  .place-spent, .how-much-spent {
     margin-right: 0px;
   }
 
-  .where-spent input, .how-much-spent input {
+  .place-spent input, .how-much-spent input {
     margin-top: -20px;
     border: 1px solid rgb(184, 181, 181);
     width: 85vw;
@@ -357,11 +367,11 @@ body {
     height: 250px;
   }
 
-  .write-where {
+  .write-place {
     width: 56vw;
   }
   
-  .write-when {
+  .write-time {
     width: auto;
     margin: 0;
   }
@@ -384,14 +394,14 @@ body {
     width: 75px;
   }
 
-  .container__replace-when {
+  .container__replace-time {
     width: 30vw;
   }
   
 }
 
 @media screen and (max-width: 800px) {
-  .my-costs__header h1 {
+  .costs__header h1 {
     font-size: 60px;
     letter-spacing: 1px;
     font-weight: 500;

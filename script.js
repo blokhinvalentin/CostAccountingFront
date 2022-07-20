@@ -1,22 +1,21 @@
-let itemList = [];
+let spendings = [];
 const host = 'http://localhost:8000';
-const hdrs = {
+const headers = {
   'Content-Type': 'application/json;charset=utf-8',
-      'Access-Control-Allow-Origin': '*'
+  'Access-Control-Allow-Origin': '*'
 };
+const itemSum = /[0-9]+/;
 
 window.onload = async () => {
   try {
-    const resp = await fetch(`${host}/allItems`, {
+    const resp = await fetch(`${host}/spendings`, {
       method: 'GET'
     });
     const result = await resp.json();
-    itemList = result;
-
+    spendings = result;
     render();
-  }
-  catch (error) {
-    alert('cant get all items');
+  } catch (error) {
+    showError('Error: unable to get all spendings');
   }
 }
 
@@ -31,79 +30,79 @@ const render = () => {
   }
 
   const total = document.getElementById('total-sum');
-  let totalSum = itemList.reduce((sum, currentSum) => sum += currentSum.cost, 0);
+  let totalSum = spendings.reduce((sumWasted, currentSum) => sumWasted += currentSum.cost, 0);
   total.innerText = `${totalSum} р.`; 
 
-  itemList.forEach((item, index) => {
-    const { _id, where, when, cost } = item;
-
-    const now = moment(when).format('DD.MM.YYYY');
+  spendings.forEach((item, index) => {
+    const { _id, place, time, cost } = item;
 
     const container = document.createElement('div');
     const containerInfo = document.createElement('div');
     const position = document.createElement('p');
-    const whereText = document.createElement('p');
-    const whenText = document.createElement('p');
-    const sum = document.createElement('p');
+    const placeText = document.createElement('p');
+    const timeText = document.createElement('p');
+    const sumWasted = document.createElement('p');
 
     list.appendChild(container);
     container.appendChild(position);
-    container.appendChild(whereText);
+    container.appendChild(placeText);
     container.appendChild(containerInfo);
-    containerInfo.appendChild(whenText);
-    containerInfo.appendChild(sum);
+    containerInfo.appendChild(timeText);
+    containerInfo.appendChild(sumWasted);
 
     container.id = `container-${_id}`;
     container.className = 'list__container';
 
-    whereText.id = `where-${_id}`;
-    whenText.id = `when-${_id}`;
-    sum.id = `sum-${_id}`;
+    placeText.id = `place-${_id}`;
+    timeText.id = `time-${_id}`;
+    sumWasted.id = `sum-${_id}`;
 
     containerInfo.id = `container-info-${_id}`;
     containerInfo.className = `list__container-info`;
 
     position.innerText = `${index + 1})`;
-    whereText.innerText = where;
-    whenText.innerText = now;
-    sum.innerText = `${cost} p.`;
+    placeText.innerText = place;
+    timeText.innerText = moment(time).format('DD.MM.YYYY');
+    sumWasted.innerText = `${cost} p.`;
 
-    whereText.className = 'write-where';
-    whenText.className = 'write-when';
-    sum.className = 'sum';
+    placeText.className = 'write-place';
+    timeText.className = 'write-time';
+    sumWasted.className = 'sum';
 
-    addButtons(_id, whereText.innerText, whenText.innerText, sum.innerText);
+    addButtons(_id, placeText.innerText, timeText.innerText, sumWasted.innerText);
   });
 }
 
 const addItem = async () => {
-  const myCostsList = document.getElementById(`list-with-costs`);
-  if (myCostsList === null) {
-    return;
-  }
-  const inputWhere = document.getElementById('where');
+  const costsList = document.getElementById(`list-with-costs`);
+  const inputWhere = document.getElementById('place');
   const inputHowMuch = document.getElementById('howMuch');
 
-  if ((inputWhere === null || inputHowMuch === null) ||
-  (inputWhere.value.trim() === '' || inputHowMuch.value.trim() === '')) {
+  if (costsList === null
+    || inputWhere === null 
+    || inputHowMuch === null
+    || inputWhere.value.trim() === '' 
+    || inputHowMuch.value.trim() === ''
+  ) {
     return;
   }
 
   try {
-    const resp = await fetch(`${host}/newItem`, {
+    const resp = await fetch(`${host}/spendings`, {
       method: 'POST',
-      headers: hdrs,
+      headers: headers,
       body: JSON.stringify({
-        where: inputWhere.value,
+        place: inputWhere.value,
         cost: Number(inputHowMuch.value)
       })
     });
     const result = await resp.json();
-    itemList.push(result);
-
+    spendings.push(result);
     render();
   } catch (error) {
-    alert('cant add new item');
+    inputWhere.value = '';
+    inputHowMuch.value = '';
+    showError('cant add new item');
   }
   
   inputWhere.value = '';
@@ -111,31 +110,30 @@ const addItem = async () => {
 }
 
 const editItem = async (id) => {
-  const myCostsList = document.getElementById(`list-with-costs`);
-  if (myCostsList === null) {
+  const costsList = document.getElementById(`list-with-costs`);
+  if (costsList === null) {
     return;
   }
-  const itemSum = /[0-9]+/;
   
   const container = document.getElementById(`container-${id}`);
   const containerInfo = document.getElementById(`container-info-${id}`);
   const buttons = document.getElementById(`buttons-${id}`);
-  const where = document.getElementById(`where-${id}`);
-  const when = document.getElementById(`when-${id}`);
-  const sum = document.getElementById(`sum-${id}`);
+  const place = document.getElementById(`place-${id}`);
+  const time = document.getElementById(`time-${id}`);
+  const sumWasted = document.getElementById(`sum-${id}`);
   const editButton = document.getElementById(`edit-button-${id}`);
   const deleteButton = document.getElementById(`delete-button-${id}`);
   
   if (container === null
     || containerInfo === null
     || buttons === null
-    || where === null
-    || when === null
-    || sum === null
+    || place === null
+    || time === null
+    || sumWasted === null
     || editButton === null
     || deleteButton === null
-    ) {
-      return;
+  ) {
+    return;
   }
 
   const replaceWhere = document.createElement('input');
@@ -146,25 +144,28 @@ const editItem = async (id) => {
   const doneImg = document.createElement('img');
   const cancelImg = document.createElement('img');
 
-  replaceWhere.className = 'container__replace-where';
-  replaceWhere.id = `replace-where-${id}`;
-  replaceWhere.value = where.innerText;
+  replaceWhere.className = 'container__replace-place';
+  replaceWhere.id = `replace-place-${id}`;
+  replaceWhere.value = place.innerText;
 
   replaceWhen.type = 'date';
-  replaceWhen.className = 'container__replace-when';
-  replaceWhen.id = `replace-when-${id}`;
+  replaceWhen.className = 'container__replace-time';
+  replaceWhen.id = `replace-time-${id}`;
 
   replaceCost.type = 'number';
   replaceCost.className = 'container__replace-cost';
   replaceCost.id = `replace-cost-${id}`;
-  const matchedSum = sum.innerText.match(itemSum);
-  replaceCost.value = sum.innerText.match(matchedSum[0]);
+  const matchedSum = sumWasted.innerText.match(itemSum);
+  replaceCost.value = sumWasted.innerText.match(matchedSum[0]);
 
   doneButton.id = `done-button-${id}`;
   cancelButton.id = `cancel-button-${id}`;
 
   doneImg.src = 'img/done.svg';
+  doneImg.alt = '';
+
   cancelImg.src = 'img/cancel.svg';
+  cancelImg.alt = '';
 
   doneButton.appendChild(doneImg);
   cancelButton.appendChild(cancelImg);
@@ -172,9 +173,9 @@ const editItem = async (id) => {
   buttons.appendChild(doneButton);
   buttons.appendChild(cancelButton);
 
-  container.replaceChild(replaceWhere, where);
-  containerInfo.replaceChild(replaceWhen, when);
-  containerInfo.replaceChild(replaceCost, sum);
+  container.replaceChild(replaceWhere, place);
+  containerInfo.replaceChild(replaceWhen, time);
+  containerInfo.replaceChild(replaceCost, sumWasted);
   buttons.replaceChild(doneButton, editButton);
   buttons.replaceChild(cancelButton, deleteButton);
 
@@ -183,45 +184,33 @@ const editItem = async (id) => {
   }
 
   cancelButton.onclick = () => {
-    cancelItemEditing(id, where.innerText, when.innerText, sum.innerText);
+    cancelItemEditing({ _id: id, place: place.innerText, time: time.innerText, cost: sumWasted.innerText });
   }
 }
 
 const deleteItem = async (id) => {
   try {
-    const myCostsList = document.getElementById(`list-with-costs`);
-    if (myCostsList === null) {
-      return;
-    }
-
-    const resp = await fetch(`${host}/deleteItem`, {
+    const resp = await fetch(`${host}/spendings/${id}`, {
       method: 'DELETE',
-      headers: hdrs,
+      headers: headers,
       body: JSON.stringify({_id: id})
     });
     const result = await resp.json();
     
     if (result.deletedCount !== 0) {
-      itemList = itemList.filter(item => item._id !== id);
+      spendings = spendings.filter(item => item._id !== id);
     }
 
     render();
   } catch (error) {
-    alert('unable to delete task');
+    showError('unable to delete task');
   }
 }
 
 const doneItemEditing = async (id) => {
-  const myCostsList = document.getElementById(`list-with-costs`);
-  if (myCostsList === null) {
-    return;
-  } 
-
-  const changedWhere = document.getElementById(`replace-where-${id}`);
-  const changedWhen = document.getElementById(`replace-when-${id}`);
+  const changedWhere = document.getElementById(`replace-place-${id}`);
+  const changedWhen = document.getElementById(`replace-time-${id}`);
   const changedCost = document.getElementById(`replace-cost-${id}`);
-
-  const itemSum = /[0-9]+/;
 
   if (changedWhere.value.trim() === ''
     || changedWhen.value.trim() === '' 
@@ -233,64 +222,63 @@ const doneItemEditing = async (id) => {
   const matchedSum = changedCost.value.match(itemSum);
 
   try {
-    const resp = await fetch(`${host}/editItem`, {
+    const resp = await fetch(`${host}/spendings/${id}`, {
       method: 'PATCH',
-      headers: hdrs,
+      headers: headers,
       body: JSON.stringify({
         _id: id,
-        where: changedWhere.value,
-        when: changedWhen.value,
-        cost: `${changedCost.value.match(matchedSum[0])}`
+        place: changedWhere.value,
+        time: changedWhen.value,
+        cost: Number(`${changedCost.value.match(matchedSum[0])}`)
       })
     });
     const result = await resp.json();
-    result.when = moment(result.when).format('MM.DD.YYYY');
 
-    for (let i = 0; i < itemList.length; i++) {
-      if (itemList[i]._id === id) {
-        itemList[i] = result;
+    for (let i = 0; i < spendings.length; i++) {
+      if (spendings[i]._id === id) {
+        spendings[i] = result;
+        break;
       }
     }
 
     render();
   } catch (error) {
-    alert('unable to update text');
+    showError('unable to update text');
   }
 }
 
-const cancelItemEditing = (id, lastWhere, lastWhen, lastSum) => {
-  const myCostsList = document.getElementById(`list-with-costs`);
-  const container = document.getElementById(`container-${id}`);
-  const containerInfo = document.getElementById(`container-info-${id}`);
-  const buttons = document.getElementById(`buttons-${id}`);
-  const replaceWhere = document.getElementById(`replace-where-${id}`);
-  const replaceWhen = document.getElementById(`replace-when-${id}`);
-  const replaceCost = document.getElementById(`replace-cost-${id}`);
-  
-  if (myCostsList === null) {
-    return;
-  }
+const cancelItemEditing = (item) => {
+  const { _id, place, time, cost } = item;
 
-  const where = document.createElement('p');
-  const when = document.createElement('p');
-  const sum = document.createElement('p');
+  const container = document.getElementById(`container-${_id}`);
+  const containerInfo = document.getElementById(`container-info-${_id}`);
+  const buttons = document.getElementById(`buttons-${_id}`);
+  const replaceWhere = document.getElementById(`replace-place-${_id}`);
+  const replaceWhen = document.getElementById(`replace-time-${_id}`);
+  const replaceCost = document.getElementById(`replace-cost-${_id}`);
 
-  [where.innerText, when.innerText, sum.innerText] = [lastWhere, lastWhen, lastSum]; 
+  const placeText = document.createElement('p');
+  const timeText = document.createElement('p');
+  const sumWasted = document.createElement('p');
 
-  container.replaceChild(where, replaceWhere);
-  containerInfo.replaceChild(when, replaceWhen);
-  containerInfo.replaceChild(sum, replaceCost);
+  placeText.innerText = place;
+  timeText.innerText = time;
+  sumWasted.innerText = cost;
+
+  container.replaceChild(placeText, replaceWhere);
+  containerInfo.replaceChild(timeText, replaceWhen);
+  containerInfo.replaceChild(sumWasted, replaceCost);
   containerInfo.removeChild(buttons);
 
-  where.className = 'write-where';
-  when.className = 'write-when';
-  sum.className = 'sum';
+  placeText.className = 'write-place';
+  timeText.className = 'write-time';
+  sumWasted.className = 'sum';
 
-  where.id = `where-${id}`;
-  when.id = `when-${id}`;
-  sum.id = `sum-${id}`;
+  placeText.id = `place-${_id}`;
+  timeText.id = `time-${_id}`;
+  sumWasted.id = `sum-${_id}`;
  
-  addButtons(id);
+  addButtons(_id);
 }
 
 const addButtons = (id) => {
@@ -323,7 +311,10 @@ const addButtons = (id) => {
   deleteButton.id = `delete-button-${id}`;
 
   editImg.src = 'img/edit.svg';
+  editImg.alt = '';
+
   deleteImg.src = 'img/delete.svg';
+  deleteImg.alt = '';
 
   editButton.onclick = () => {
     editItem(id);
@@ -332,4 +323,9 @@ const addButtons = (id) => {
   deleteButton.onclick = () => {
     deleteItem(id);
   }
+}
+
+const showError = (errorMessage) => {
+  const errorShow = document.getElementById('error-show');
+  errorShow.innerText = errorMessage;
 }

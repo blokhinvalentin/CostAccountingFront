@@ -11,16 +11,16 @@
   <title>Document</title>
 </head>
 <body>
-  <div class="my-costs__content-page">
-    <div class="my-costs__header">
+  <div class="costs__content-page">
+    <div class="costs__header">
       <h1><i>Учет моих расходов</i></h1>
     </div>
 
-    <div class="my-costs__data-picture">
+    <div class="costs__data-picture">
       <div class="spends">
-        <div class="where-spent">
+        <div class="place-spent">
           <h4>Куда было потрачено:</h4>
-          <input type="text" placeholder="Куда было потрачено" id="where">
+          <input type="text" placeholder="Куда было потрачено" id="place">
         </div>
 
         <div class="how-much-spent">
@@ -31,17 +31,20 @@
         <button onclick="addItem()">Добавить</button>
       </div>
 
-      <div class="total">
-        <p>Итого:&nbsp;</p>
-        <p id="total-sum"></p>
+      <div class="under-spendings">
+        <p class="error-message" id="error-show"></p>
+
+        <div class="total">
+          <p>Итого:&nbsp;</p>
+          <p id="total-sum"></p>
+        </div>
       </div>
 
-      <div class="my-costs__list" id="list-with-costs">
+      <div class="costs__list" id="list-with-costs">
         <div class="loading">Loading&#8230;</div>
       </div>
     </div>
   </div>
-
-  <script type="text/JavaScript" src=" https://MomentJS.com/downloads/moment.js"></script>
+  <script type="text/JavaScript" src="https://MomentJS.com/downloads/moment.js"></script>
 </body>
 </html>
