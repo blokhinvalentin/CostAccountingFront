@@ -15,7 +15,7 @@ window.onload = async () => {
     spendings = result;
     render();
   } catch (error) {
-    showError('Error: unable to get all spendings');
+    showError('Error: Error: unable to get all spendings');
   }
 }
 
@@ -81,9 +81,11 @@ const addSpending = async () => {
   if (costsList === null
     || inputWhere === null 
     || inputHowMuch === null
-    || inputWhere.value.trim() === '' 
-    || inputHowMuch.value.trim() === ''
   ) {
+    return;
+  }
+
+  if (inputWhere.value.trim() === '' || inputHowMuch.value.trim() === '') {
     return;
   }
 
@@ -99,14 +101,11 @@ const addSpending = async () => {
     const result = await resp.json();
     spendings.push(result);
     render();
-  } catch (error) {
     inputWhere.value = '';
     inputHowMuch.value = '';
-    showError('cant add new item');
+  } catch (error) {
+    showError('Error: cant add new item');
   }
-  
-  inputWhere.value = '';
-  inputHowMuch.value = '';
 }
 
 const editSpending = async (item) => {
@@ -196,7 +195,8 @@ const deleteSpending = async (id) => {
   try {
     const resp = await fetch(`${host}/spendings/${id}`, {
       method: 'DELETE',
-      headers: headers
+      headers: headers,
+      params: id
     });
     const result = await resp.json();
     
@@ -206,7 +206,7 @@ const deleteSpending = async (id) => {
 
     render();
   } catch (error) {
-    showError('unable to delete task');
+    showError('Error: unable to delete task');
   }
 }
 
@@ -231,7 +231,8 @@ const doneItemEditing = async (id) => {
       body: JSON.stringify({
         place: changedWhere.value,
         time: changedWhen.value,
-        cost: Number(`${changedCost.value.match(matchedSum[0])}`)
+        cost: Number(`${changedCost.value.match(matchedSum[0])}`),
+        params: id
       })
     });
     const result = await resp.json();
@@ -245,7 +246,7 @@ const doneItemEditing = async (id) => {
 
     render();
   } catch (error) {
-    showError('unable to update text');
+    showError('Error: unable to update text');
   }
 }
 

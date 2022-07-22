@@ -51,17 +51,20 @@ body {
   transform: scale(1.1);
 }
 
-.place-spent, .how-much-spent {
+.place-spent,
+.how-much-spent {
   margin-right: 20px;
 }
 
-.place-spent h4, .how-much-spent h4 {
+.place-spent h4, 
+.how-much-spent h4 {
   font-size: 25px;
   font-weight: 300;
   letter-spacing: 1px;
 }
 
-.place-spent input, .how-much-spent input {
+.place-spent input, 
+.how-much-spent input {
   margin-top: -20px;
   border: 1px solid rgb(184, 181, 181);
   border-radius: 7px;
@@ -74,12 +77,14 @@ body {
   width: 28vw;
 }
 
-.how-much-spent input:focus, .place-spent input:focus  {
+.how-much-spent input:focus, 
+.place-spent input:focus  {
   border: 0px;
   outline: 0px;
 }
 
-.how-much-spent::-webkit-input-placeholder, .place-spent::-webkit-input-placeholder {
+.how-much-spent::-webkit-input-placeholder, 
+.place-spent::-webkit-input-placeholder {
   opacity: 0.4;
   letter-spacing: 1px;
 }
@@ -161,7 +166,9 @@ body {
   width: 50px;
 }
 
-.container__replace-place, .container__replace-time, .container__replace-cost {
+.container__replace-place, 
+.container__replace-time, 
+.container__replace-cost {
   height: 70px;
   width: 40vw;
   outline: 0px;
@@ -208,6 +215,7 @@ body {
 .loading:not(:required) {
 
   /* hide "loading..." text */
+  
   font: 0/0 a;
   color: transparent;
   text-shadow: none;
@@ -304,9 +312,10 @@ body {
     font-size: 45px;
   }
 
-  .container__replace-place, .container__replace-time, .container__replace-cost {
+  .container__replace-place,
+  .container__replace-time, 
+  .container__replace-cost {
     font-size: 45px;
-
   }
 }
 
@@ -343,11 +352,13 @@ body {
     background-color: #49b78d;
   }
 
-  .place-spent, .how-much-spent {
+  .place-spent,
+  .how-much-spent {
     margin-right: 0px;
   }
 
-  .place-spent input, .how-much-spent input {
+  .place-spent input,
+  .how-much-spent input {
     margin-top: -20px;
     border: 1px solid rgb(184, 181, 181);
     width: 85vw;
@@ -398,7 +409,6 @@ body {
   .container__replace-time {
     width: 30vw;
   }
-  
 }
 
 @media screen and (max-width: 800px) {
@@ -407,6 +417,4 @@ body {
     letter-spacing: 1px;
     font-weight: 500;
   }
-
-  
 }
