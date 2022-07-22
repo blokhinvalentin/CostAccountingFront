@@ -27,6 +27,7 @@ body {
 .spends {
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
   margin-bottom: 25px;
 }
 
@@ -70,7 +71,7 @@ body {
 }
 
 .how-much-spent input {
-  width: 25vw;
+  width: 28vw;
 }
 
 .how-much-spent input:focus, .place-spent input:focus  {
@@ -83,7 +84,7 @@ body {
   letter-spacing: 1px;
 }
 
-.under-spendings {
+.show-error-and-total {
   display: flex;
   flex-direction: row;
   justify-content: space-between;

@@ -69,11 +69,11 @@ const render = () => {
     timeText.className = 'write-time';
     sumWasted.className = 'sum';
 
-    addButtons(_id, placeText.innerText, timeText.innerText, sumWasted.innerText);
+    addButtons(item);
   });
 }
 
-const addItem = async () => {
+const addSpending = async () => {
   const costsList = document.getElementById(`list-with-costs`);
   const inputWhere = document.getElementById('place');
   const inputHowMuch = document.getElementById('howMuch');
@@ -109,11 +109,13 @@ const addItem = async () => {
   inputHowMuch.value = '';
 }
 
-const editItem = async (id) => {
+const editSpending = async (item) => {
   const costsList = document.getElementById(`list-with-costs`);
   if (costsList === null) {
     return;
   }
+
+  const id = item._id;
   
   const container = document.getElementById(`container-${id}`);
   const containerInfo = document.getElementById(`container-info-${id}`);
@@ -143,6 +145,8 @@ const editItem = async (id) => {
   const cancelButton = document.createElement('button');
   const doneImg = document.createElement('img');
   const cancelImg = document.createElement('img');
+
+  containerInfo.id = `container-info-${id}`;
 
   replaceWhere.className = 'container__replace-place';
   replaceWhere.id = `replace-place-${id}`;
@@ -184,16 +188,15 @@ const editItem = async (id) => {
   }
 
   cancelButton.onclick = () => {
-    cancelItemEditing({ _id: id, place: place.innerText, time: time.innerText, cost: sumWasted.innerText });
+    cancelSpendingEditing(item);
   }
 }
 
-const deleteItem = async (id) => {
+const deleteSpending = async (id) => {
   try {
     const resp = await fetch(`${host}/spendings/${id}`, {
       method: 'DELETE',
-      headers: headers,
-      body: JSON.stringify({_id: id})
+      headers: headers
     });
     const result = await resp.json();
     
@@ -226,7 +229,6 @@ const doneItemEditing = async (id) => {
       method: 'PATCH',
       headers: headers,
       body: JSON.stringify({
-        _id: id,
         place: changedWhere.value,
         time: changedWhen.value,
         cost: Number(`${changedCost.value.match(matchedSum[0])}`)
@@ -247,7 +249,7 @@ const doneItemEditing = async (id) => {
   }
 }
 
-const cancelItemEditing = (item) => {
+const cancelSpendingEditing = (item) => {
   const { _id, place, time, cost } = item;
 
   const container = document.getElementById(`container-${_id}`);
@@ -262,8 +264,8 @@ const cancelItemEditing = (item) => {
   const sumWasted = document.createElement('p');
 
   placeText.innerText = place;
-  timeText.innerText = time;
-  sumWasted.innerText = cost;
+  timeText.innerText = moment(time).format('DD.MM.YYYY');
+  sumWasted.innerText = `${cost} p.`;
 
   container.replaceChild(placeText, replaceWhere);
   containerInfo.replaceChild(timeText, replaceWhen);
@@ -277,25 +279,22 @@ const cancelItemEditing = (item) => {
   placeText.id = `place-${_id}`;
   timeText.id = `time-${_id}`;
   sumWasted.id = `sum-${_id}`;
- 
-  addButtons(_id);
+
+  addButtons(item);
 }
 
-const addButtons = (id) => {
+const addButtons = (item) => {
+  const id = item._id;
+
   const containerInfo = document.getElementById(`container-info-${id}`);
-  if (parent === null) {
-    return;
-  }
 
   const buttons = document.createElement('div');
-
   const editButton = document.createElement('button');
   const deleteButton = document.createElement('button');
   const editImg = document.createElement('img');
   const deleteImg = document.createElement('img');
 
   containerInfo.appendChild(buttons);
-  
   buttons.appendChild(editButton);
   buttons.appendChild(deleteButton);
   editButton.appendChild(editImg);
@@ -317,15 +316,18 @@ const addButtons = (id) => {
   deleteImg.alt = '';
 
   editButton.onclick = () => {
-    editItem(id);
+    editSpending(item);
   }
 
   deleteButton.onclick = () => {
-    deleteItem(id);
+    deleteSpending(id);
   }
 }
 
 const showError = (errorMessage) => {
   const errorShow = document.getElementById('error-show');
+  if (errorShow === null) {
+    return;
+  }
   errorShow.innerText = errorMessage;
 }
